@@ -416,10 +416,8 @@ function Dashboard() {
             </div>
           </div>
 
-          <input
-            type="date"
+          <select
             value={selectedDate}
-            max={today}
             onChange={(e) => setSelectedDate(e.target.value)}
             style={{
               padding:'12px 16px',
@@ -431,9 +429,26 @@ function Dashboard() {
               color:'#1a202c',
               outline:'none',
               cursor:'pointer',
-              transition:'all 0.2s ease'
+              minWidth:'240px'
             }}
-          />
+          >
+            {logs.map((log, index) => {
+              const formattedDate = new Date(log.date)
+                .toISOString()
+                .split('T')[0];
+
+              return (
+                <option key={index} value={formattedDate}>
+                  {new Date(log.date).toLocaleDateString('en-US', {
+                    weekday:'long',
+                    month:'long',
+                    day:'numeric',
+                    year:'numeric'
+                  })}
+                </option>
+              );
+            })}
+          </select>
         </motion.div>
 
           {!selectedLog && (
