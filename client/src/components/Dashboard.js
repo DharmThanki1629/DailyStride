@@ -230,27 +230,55 @@ function Dashboard() {
     const fetchLogs = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('https://dailystride.onrender.com/api/metrics', {
-          headers: { Authorization: 'Bearer ' + token }
-        });
-        // setLogs(res.data);
-        const sortedLogs = res.data.sort(
-            (a, b) => new Date(b.date) - new Date(a.date)
-          );
 
-          setLogs(sortedLogs);
-      } catch(err) { setError('Failed to load data.'); }
+        const res = await axios.get(
+          'https://dailystride.onrender.com/api/metrics',
+          {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          }
+        );
+
+        const sortedLogs = res.data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+
+        setLogs(sortedLogs);
+
+      } catch (err) {
+        setError('Failed to load data.');
+      }
     };
+
     fetchLogs();
   }, []);
 
+  useEffect(() => {
+    if (logs.length > 0) {
+      const firstDate = new Date(logs[0].date)
+        .toISOString()
+        .split('T')[0];
+
+      setSelectedDate(firstDate);
+    }
+  }, [logs]);
   // const getLatest = (field) => {
   //   const found = logs.find(l => l[field] !== undefined && l[field] !== null && l[field] !== 0);
   //   return found ? found[field] : 0;
   // };
-  const selectedLog = logs.find(log =>
-  new Date(log.date).toISOString().split('T')[0] === selectedDate
-  );
+  const selectedLog = logs.find(log => {
+    const logDate = new Date(log.date);
+
+    const formatted =
+      logDate.getFullYear() +
+      '-' +
+      String(logDate.getMonth() + 1).padStart(2, '0') +
+      '-' +
+      String(logDate.getDate()).padStart(2, '0');
+
+    return formatted === selectedDate;
+  });
 
   const getSelectedValue = (field) => {
     if (!selectedLog) return 0;
@@ -326,7 +354,7 @@ function Dashboard() {
           background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           padding:'28px 32px', borderRadius:'24px', color:'white',
           boxShadow:'0 12px 40px rgba(102,126,234,0.45)',
-          position:'relative', overflow:'hidden',
+          position:'relative',
         }}
       >
         {/* Decorative circles */}
@@ -429,17 +457,22 @@ function Dashboard() {
               color:'#1a202c',
               outline:'none',
               cursor:'pointer',
-              minWidth:'240px'
+              minWidth:'260px'
             }}
           >
             {logs.map((log, index) => {
-              const formattedDate = new Date(log.date)
-                .toISOString()
-                .split('T')[0];
+              const logDate = new Date(log.date);
+
+              const formattedValue =
+                logDate.getFullYear() +
+                '-' +
+                String(logDate.getMonth() + 1).padStart(2, '0') +
+                '-' +
+                String(logDate.getDate()).padStart(2, '0');
 
               return (
-                <option key={index} value={formattedDate}>
-                  {new Date(log.date).toLocaleDateString('en-US', {
+                <option key={index} value={formattedValue}>
+                  {logDate.toLocaleDateString('en-US', {
                     weekday:'long',
                     month:'long',
                     day:'numeric',
