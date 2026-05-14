@@ -7,7 +7,10 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors({ origin: 'https://dailystride.onrender.com' }));
+app.use(cors({
+  origin: 'https://daily-stride-seven.vercel.app',
+  credentials: true
+}));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
