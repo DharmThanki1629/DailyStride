@@ -100,14 +100,14 @@ function LogHealth() {
                 <div key={field.name} style={styles.inputGroup}>
                   <label style={styles.label}>{field.icon} {field.label}</label>
                   <input
-                    style={{ ...styles.input, borderColor: form[field.name] ? field.color : '#e2e8f0' }}
-                    type="number"
-                    name={field.name}
-                    placeholder={field.placeholder}
-                    onChange={handleChange}
-                    min="0"
-                    step={field.name === 'weight' ? '0.1' : '1'}
-                  />
+                  style={{ ...styles.input, borderColor: form[field.name] ? field.color : '#e2e8f0' }}
+                  type="number"
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  onChange={handleChange}
+                  min="0"
+                  step={field.name === 'weight' ? '0.1' : '1'}
+                />
                   <div style={styles.inputDesc}>{field.desc}</div>
                 </div>
               ))}
