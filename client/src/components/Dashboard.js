@@ -228,7 +228,7 @@ function Dashboard() {
     const fetchLogs = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/metrics', {
+        const res = await axios.get('https://dailystride.onrender.com/api/metrics', {
           headers: { Authorization: 'Bearer ' + token }
         });
         setLogs(res.data);

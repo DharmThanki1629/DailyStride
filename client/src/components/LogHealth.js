@@ -20,7 +20,7 @@ function LogHealth() {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/metrics', form, {
+      await axios.post('https://dailystride.onrender.com/api/metrics', form, {
         headers: { Authorization: 'Bearer ' + token }
       });
       setMsg('Health data logged successfully!');

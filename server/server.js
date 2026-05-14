@@ -7,7 +7,7 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: 'https://dailystride.onrender.com' }));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
