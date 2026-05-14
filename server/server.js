@@ -7,8 +7,15 @@ dotenv.config();
 connectDB();
 
 const app = express();
+// app.use(cors({
+//   origin: 'https://daily-stride-seven.vercel.app',
+//   credentials: true
+// }));
 app.use(cors({
-  origin: 'https://daily-stride-seven.vercel.app',
+  origin: [
+    'https://dailystride360.vercel.app',
+    'https://daily-stride-seven.vercel.app'
+  ],
   credentials: true
 }));
 app.use(express.json());
