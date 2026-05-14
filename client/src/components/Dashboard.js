@@ -244,10 +244,10 @@ function Dashboard() {
     fetchLogs();
   }, []);
 
-  const getLatest = (field) => {
-    const found = logs.find(l => l[field] !== undefined && l[field] !== null && l[field] !== 0);
-    return found ? found[field] : 0;
-  };
+  // const getLatest = (field) => {
+  //   const found = logs.find(l => l[field] !== undefined && l[field] !== null && l[field] !== 0);
+  //   return found ? found[field] : 0;
+  // };
   const selectedLog = logs.find(log =>
   new Date(log.date).toISOString().split('T')[0] === selectedDate
   );
