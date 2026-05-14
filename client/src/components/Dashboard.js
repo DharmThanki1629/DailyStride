@@ -233,7 +233,12 @@ function Dashboard() {
         const res = await axios.get('https://dailystride.onrender.com/api/metrics', {
           headers: { Authorization: 'Bearer ' + token }
         });
-        setLogs(res.data);
+        // setLogs(res.data);
+        const sortedLogs = res.data.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+
+          setLogs(sortedLogs);
       } catch(err) { setError('Failed to load data.'); }
     };
     fetchLogs();
@@ -430,9 +435,33 @@ function Dashboard() {
             }}
           />
         </motion.div>
+
+          {!selectedLog && (
+            <div style={{
+              background:'#fffaf0',
+              border:'1px solid #f6ad55',
+              color:'#c05621',
+              padding:'12px 16px',
+              borderRadius:'12px',
+              marginBottom:'20px',
+              fontSize:'13px',
+              fontWeight:'600'
+            }}>
+              ⚠️ No health data found for this selected date.
+            </div>
+          )}
+
           {/* Progress Rings */}
           <motion.div {...fadeUp(0.1)} style={{ marginBottom:'24px' }}>
-            <h2 style={{ fontSize:'18px', fontWeight:'700', color:'#1a202c', marginBottom:'14px' }}>🎯 Today's Progress Rings</h2>
+           <h2 style={{ fontSize:'18px', fontWeight:'700', color:'#1a202c', marginBottom:'14px' }}>
+              🎯 Progress Rings for {
+                new Date(selectedDate).toLocaleDateString('en-US',{
+                  weekday:'long',
+                  month:'long',
+                  day:'numeric'
+                })
+              }
+            </h2>
             <div style={{
               background:'linear-gradient(135deg, #fafbff 0%, #f3f4f8 100%)',
               borderRadius:'24px', padding:'32px',
