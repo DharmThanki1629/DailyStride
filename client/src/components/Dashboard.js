@@ -222,6 +222,8 @@ const glassCard = {
 function Dashboard() {
   const [logs, setLogs] = useState([]);
   const [error, setError] = useState('');
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState(today);
   const userName = localStorage.getItem('userName');
 
   useEffect(() => {
@@ -241,14 +243,70 @@ function Dashboard() {
     const found = logs.find(l => l[field] !== undefined && l[field] !== null && l[field] !== 0);
     return found ? found[field] : 0;
   };
+  const selectedLog = logs.find(log =>
+  new Date(log.date).toISOString().split('T')[0] === selectedDate
+  );
+
+  const getSelectedValue = (field) => {
+    if (!selectedLog) return 0;
+    return selectedLog[field] || 0;
+  };
 
   const rings = [
-    { icon:'👟', label:'Steps',      value: getLatest('steps'),      max:10000, unit:'steps',   color:'#667eea', delay:0 },
-    { icon:'💧', label:'Water',      value: getLatest('water'),      max:8,     unit:'glasses', color:'#0ea5e9', delay:0.08 },
-    { icon:'🔥', label:'Calories',   value: getLatest('calories'),   max:500,   unit:'kcal',    color:'#f97316', delay:0.16 },
-    { icon:'😴', label:'Sleep',      value: getLatest('sleepHours'), max:8,     unit:'hrs',     color:'#8b5cf6', delay:0.24 },
-    { icon:'❤️', label:'Heart Rate', value: getLatest('heartRate'),  max:100,   unit:'bpm',     color:'#f43f5e', delay:0.32 },
-    { icon:'⚖️', label:'Weight',     value: getLatest('weight'),     max:100,   unit:'kg',      color:'#06b6d4', delay:0.40 },
+  {
+    icon:'👟',
+    label:'Steps',
+    value: getSelectedValue('steps'),
+    max:10000,
+    unit:'steps',
+    color:'#667eea',
+    delay:0
+  },
+  {
+    icon:'💧',
+    label:'Water',
+    value: getSelectedValue('water'),
+    max:8,
+    unit:'glasses',
+    color:'#0ea5e9',
+    delay:0.08
+  },
+  {
+    icon:'🔥',
+    label:'Calories',
+    value: getSelectedValue('calories'),
+    max:500,
+    unit:'kcal',
+    color:'#f97316',
+    delay:0.16
+  },
+  {
+    icon:'😴',
+    label:'Sleep',
+    value: getSelectedValue('sleepHours'),
+    max:8,
+    unit:'hrs',
+    color:'#8b5cf6',
+    delay:0.24
+  },
+  {
+    icon:'❤️',
+    label:'Heart Rate',
+    value: getSelectedValue('heartRate'),
+    max:100,
+    unit:'bpm',
+    color:'#f43f5e',
+    delay:0.32
+  },
+  {
+    icon:'⚖️',
+    label:'Weight',
+    value: getSelectedValue('weight'),
+    max:100,
+    unit:'kg',
+    color:'#06b6d4',
+    delay:0.40
+  },
   ];
 
   return (
@@ -304,6 +362,74 @@ function Dashboard() {
         </motion.div>
       ) : (
         <>
+        <motion.div
+          {...fadeUp(0.08)}
+          style={{
+            display:'flex',
+            justifyContent:'space-between',
+            alignItems:'center',
+            padding:'18px 22px',
+            borderRadius:'22px',
+            background:'linear-gradient(135deg, #ffffff 0%, #f8faff 100%)',
+            boxShadow:'0 4px 24px rgba(0,0,0,0.06)',
+            border:'1px solid #ebebf0',
+            marginBottom:'22px',
+          }}
+        >
+          <div style={{ display:'flex', alignItems:'center', gap:'14px' }}>
+            <div style={{
+              width:'52px',
+              height:'52px',
+              borderRadius:'16px',
+              background:'linear-gradient(135deg,#667eea,#764ba2)',
+              display:'flex',
+              alignItems:'center',
+              justifyContent:'center',
+              fontSize:'24px',
+              color:'white',
+              boxShadow:'0 8px 20px rgba(102,126,234,0.35)'
+            }}>
+              📅
+            </div>
+
+            <div>
+              <div style={{
+                fontSize:'16px',
+                fontWeight:'800',
+                color:'#1a202c',
+                marginBottom:'2px'
+              }}>
+                View Daily Progress
+              </div>
+
+              <div style={{
+                fontSize:'12px',
+                color:'#718096'
+              }}>
+                Select any logged date to view health analytics
+              </div>
+            </div>
+          </div>
+
+          <input
+            type="date"
+            value={selectedDate}
+            max={today}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            style={{
+              padding:'12px 16px',
+              borderRadius:'14px',
+              border:'2px solid #e2e8f0',
+              background:'white',
+              fontSize:'14px',
+              fontWeight:'600',
+              color:'#1a202c',
+              outline:'none',
+              cursor:'pointer',
+              transition:'all 0.2s ease'
+            }}
+          />
+        </motion.div>
           {/* Progress Rings */}
           <motion.div {...fadeUp(0.1)} style={{ marginBottom:'24px' }}>
             <h2 style={{ fontSize:'18px', fontWeight:'700', color:'#1a202c', marginBottom:'14px' }}>🎯 Today's Progress Rings</h2>
@@ -320,9 +446,22 @@ function Dashboard() {
 
           {/* 3 Cards */}
           <motion.div {...fadeUp(0.2)} style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'20px', marginBottom:'24px', alignItems:'start' }}>
-            <HealthScore latest={{ steps: getLatest('steps'), sleepHours: getLatest('sleepHours'), heartRate: getLatest('heartRate'), water: getLatest('water') }} />
-            <BMICard latest={{ weight: getLatest('weight') }} />
-            <WeeklySummary logs={logs} />
+            <HealthScore latest={{
+              steps: getSelectedValue('steps'),
+              sleepHours: getSelectedValue('sleepHours'),
+              heartRate: getSelectedValue('heartRate'),
+              water: getSelectedValue('water')
+            }} />
+            <BMICard latest={{ weight: getSelectedValue('weight') }} />
+            <WeeklySummary logs={logs.filter(log => {
+              const logDate = new Date(log.date);
+              const selected = new Date(selectedDate);
+
+              return (
+                logDate.getMonth() === selected.getMonth() &&
+                logDate.getFullYear() === selected.getFullYear()
+              );
+            })} />
           </motion.div>
 
           {/* History Table */}
