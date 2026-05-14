@@ -82,7 +82,7 @@ function Register() {
               <div style={styles.inputWrap}>
                 <span style={styles.inputIcon}>📧</span>
                 <input style={styles.input} name="email"
-                  placeholder="you@example.com" type="email"
+                  placeholder="you@gmail.com" type="email"
                   onChange={handleChange} required />
               </div>
             </div>
