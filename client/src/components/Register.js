@@ -72,7 +72,7 @@ function Register() {
               <div style={styles.inputWrap}>
                 <span style={styles.inputIcon}>👤</span>
                 <input style={styles.input} name="name"
-                  placeholder="Name" type="text"
+                  placeholder="Your Name" type="text"
                   onChange={handleChange} required />
               </div>
             </div>
