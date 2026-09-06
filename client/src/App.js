@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -43,6 +44,7 @@ function App() {
       <div style={{ overflow: 'hidden' }}>
         <AnimatedRoutes />
       </div>
+      <SpeedInsights />
     </Router>
   );
 }
